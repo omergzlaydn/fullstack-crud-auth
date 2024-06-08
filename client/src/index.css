@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+}
+
+.item {
+  padding: 10px;
+  border-radius: 10px;
+  color: black;
+}
+
+.active {
+  background: rgba(0, 98, 255, 0.741);
+  color: white;
+}
