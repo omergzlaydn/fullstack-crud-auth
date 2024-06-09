@@ -8,7 +8,7 @@ export const inputs = [
     isReq: true,
   },
   {
-    label: "Descripiton",
+    label: "Description",
     name: "desc",
     isReq: true,
   },

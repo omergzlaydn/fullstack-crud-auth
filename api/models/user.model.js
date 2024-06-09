@@ -5,23 +5,23 @@ const userSchema = new Schema(
   {
     username: {
       type: String,
-      required: [true, "Lütfen username alnını belirleyin"],
+      required: [true, "Please provide a username"],
       unique: [
         true,
-        "Bu isimde bir kullanıcı mevcut. Lütfen faklı bir nickname belirleyin.",
+        "This username is already taken. Please choose a different one.",
       ],
     },
     email: {
       type: String,
-      required: [true, "Lütfen email alnını belirleyin"],
+      required: [true, "Please provide an email address"],
       unique: [
         true,
-        "Bu mail adresinde bir kullanıcı mevcut. Lütfen faklı bir email belirleyin.",
+        "This email is already taken. Please choose a different one.",
       ],
     },
     password: {
       type: String,
-      required: [true, "Lütfen şifre alanını belirleyin"],
+      required: [true, "Please provide a password"],
     },
     photo: {
       type: String,

@@ -1,4 +1,5 @@
-import Input from "../components/Input";
+import React, { useState } from "react";
+import Input from "../components/Input"; // Assuming Input is a custom component
 import { inputs } from "../utils/constants";
 import upload from "../utils/upload";
 import api from "../utils/api";
@@ -8,59 +9,51 @@ import { useMutation } from "react-query";
 
 const AddNote = ({ editItem }) => {
   const navigate = useNavigate();
+  const [thumbnailUrl, setThumbnailUrl] = useState(null);
 
   const postMutation = useMutation({
-    mutationFn: (data) => {
-      return api.post(`/note`, data);
-    },
-
+    mutationFn: (data) => api.post(`/note`, data),
     onSuccess: (res) => {
       navigate(`/note/${res.data.note._id}`);
-
       toast.success(`Note Created`);
     },
-
     onError: () => {
-      toast.warning("Failed to create");
+      toast.warning("Failed to create note");
     },
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => {
-      return api.patch(`/note/${id}`, data);
-    },
-
-    onSuccess: (res) => {
+    mutationFn: ({ id, data }) => api.patch(`/note/${id}`, data),
+    onSuccess: () => {
       navigate(`/note/${editItem._id}`);
-
       toast.success(`Note Updated`);
     },
-
     onError: () => {
-      toast.warning("Failed to update");
+      toast.warning("Failed to update note");
     },
   });
 
-  // form gönderilince
-  const handleSubmit = async (e) => {
-    // sayfayı yenilemeyi engelle
-    e.preventDefault();
+  const handleFileChange = (e, name) => {
+    const file = e.target.files[0];
+    if (file && name === "cover") {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setThumbnailUrl(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-    // bütün inputlardaki veirlere eriş
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const formData = new FormData(e.target);
     const noteData = Object.fromEntries(formData.entries());
-
-    // fotoğrafları bulut depolama alanına yükle
     const coverUrl = await upload(noteData.cover);
-
-    // fotoğrafların url'ini nesneye kaydet
     noteData.cover = coverUrl || undefined;
 
     if (!editItem) {
-      // api'a veriyi kaydet
       postMutation.mutate(noteData);
     } else {
-      // api'daki veriyi kaydet
       updateMutation.mutate({ id: editItem._id, data: noteData });
     }
   };
@@ -71,11 +64,45 @@ const AddNote = ({ editItem }) => {
         {editItem ? "Edit Your Note" : "Create a New Note"}
       </h1>
       <form onSubmit={handleSubmit} className="grid lg:grid-cols-2 gap-x-10">
-        {inputs.map((data) => (
-          <Input {...data} editItem={editItem} />
+        {inputs.map((input) => (
+          <div key={input.name} className="mb-4">
+            <label htmlFor={input.name} className="block font-bold mb-2">
+              {input.label}
+            </label>
+            {input.type === "file" ? (
+              <>
+                <input
+                  type="file"
+                  id={input.name}
+                  name={input.name}
+                  accept={input.accept || "image/*"}
+                  required={input.isReq}
+                  onChange={(e) => handleFileChange(e, input.name)}
+                />
+                {input.name === "cover" && thumbnailUrl && (
+                  <div className="mt-2">
+                    <img
+                      src={thumbnailUrl}
+                      alt="Thumbnail"
+                      style={{ width: "100px", height: "100px" }}
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <input
+                type="text"
+                id={input.name}
+                name={input.name}
+                required={input.isReq}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            )}
+          </div>
         ))}
 
         <button
+          type="submit"
           disabled={updateMutation.isLoading || postMutation.isLoading}
           className="my-10 bg-blue-500 p-2 font-bold text-white rounded hover:bg-blue-600"
         >

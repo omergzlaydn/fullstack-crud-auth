@@ -71,6 +71,6 @@ export const login = async (req, res, next) => {
 // kullanıcya giriş yaptığında gönderdiğimiz accessToken çerezinin geçerliliğini sonlandır
 export const logout = async (req, res, next) => {
   res.status(200).json({
-    message: "Kullanıcı hesabından çıkış yaptı",
+    message: "User logged out",
   });
 };

@@ -23,7 +23,7 @@ const Login = () => {
         //localhost:5173/add-note
 
         // kullanıcı bilgilerini locale kaydet
-        http: localStorage.setItem("user", JSON.stringify(res.data.user));
+        localStorage.setItem("user", JSON.stringify(res.data.user));
 
         localStorage.setItem("token", JSON.stringify(res.data.token));
 
@@ -41,13 +41,13 @@ const Login = () => {
 
       <form onSubmit={handleSubmit}>
         <Input label="Name" name="username" isReq={true} />
-        <Input label="Password" name="password" isReq={true} />
+        <Input label="Password" name="password" type="password" isReq={true} />
 
         <Button text="Login" />
       </form>
 
       <p className="mt-5 text-gray-500">
-        Don't have an account?
+        Don&apos;t have an account?
         <Link className="ms-3 text-blue-500" to="/register">
           Register
         </Link>

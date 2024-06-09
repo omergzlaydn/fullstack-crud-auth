@@ -6,6 +6,7 @@ import noteRouter from "./routes/note.route.js";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { conditionalMiddleware } from "./middlewares/conditional.js";
 
 // env dosyasındaki veriler erişmek için kurulum
 dotenv.config({
@@ -15,20 +16,28 @@ dotenv.config({
 // veritabanı ile bağlantı kur
 mongoose
   .connect(process.env.DATABASE_URL)
-  .then(() => console.log("Veritabanı ile bağlantı kuruldu"))
-  .catch((err) =>
-    console.log("Veritabanı ile bağlantı kurulurken bir HATA oluştu", err)
-  );
+  .then(() => console.log("DB Connection Successfull"))
+  .catch((err) => console.log("DB Connection Error:", err));
 
 // express uygulması oluştur
 const app = express();
 
-//* middlewares
-//a) bodydeki json içeriğinin okunmasını sağlar
-app.use(express.json());
+const excludePaths = ["/api/auth/login", "/api/auth/register"];
 
 //b) kendi react uygulmamızdan gelen isteklere cevap vermesine izin ver
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+
+// middleware/conditionalMiddleware.js
+app.use(
+  conditionalMiddleware(
+    cors({ origin: "http://localhost:5173", credentials: true }),
+    excludePaths
+  )
+);
+
+//* middlewares
+//a) bodydeki json içeriğinin okunmasını sağlar
+app.use(express.json());
 
 //c) konsola istekleri yazan middlware
 app.use(morgan("dev"));

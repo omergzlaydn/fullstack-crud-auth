@@ -22,7 +22,7 @@ const upload = async (file) => {
     // resmin url'ini fonksiyonun çağrıldığı yere döndür
     return res.data.url;
   } catch (err) {
-    toast.error("fotoğraf yüklenirken bir sorun oluştu");
+    toast.error("There is an error while uploading image");
   }
 };
 
