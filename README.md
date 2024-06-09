@@ -1,7 +1,11 @@
 projeyi çalıştırma adımları
 
-1- cd api npmn install npm start
+1- cd api
+   npm install 
+   npm start
 
-2- cd client npm install npx vite
+2- cd client
+   npm install
+   npx vite
 
-böylee local hostüzernden projeye ulaşmı oluruz ve önce register üzerinden kaydolup giriş sayfasıdan giri yapmalyız ardından istediimiz işlemi gerçeleştirebiliriz.
+böylece local hostüzernden projeye ulaşmış oluruz ve önce register üzerinden kaydolup giriş sayfasıdan giriş yapmalıyız ardından istediiğimiz işlemi gerçeleştirebiliriz.
